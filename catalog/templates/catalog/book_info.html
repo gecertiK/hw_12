@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book information</title>
+</head>
+<body>
+
+<h1>Information about book:</h1>
+    <ul>ID: {{ id }}</ul>
+    <ul>Title: {{ title }}</ul>
+    <ul><a href="{% url 'catalog:author_info' id=author_id %}">Author: {{ author }}</a></ul>
+    <ul>Publishers:</ul>
+        {% for obj in publisher %}
+            <ul><a href="{% url 'catalog:publisher_info' pk=obj.pk %}">{{ obj.name }}</a></ul>
+        {% endfor %}
+    <ul>Price: {{ price }}</ul>
+    <ul>Pages: {{ pages }}</ul>
+    <ul>Pubdate: {{ pubdate }}</ul>
+    <ul><a href="{% url 'catalog:index' %}">Back to main menu</a></ul>
+    <ul><a href="{% url 'catalog:books' %}">Back to the list of books</a></ul>
+</body>
+</html>
