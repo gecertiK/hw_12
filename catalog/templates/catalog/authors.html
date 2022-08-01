@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Authors</title>
+</head>
+<body>
+
+    <h1>Count of authors: {{ authors.count }}</h1>
+   <h2>List of authors</h2>
+   <ul>
+        {% for obj in authors %}
+            <li><a href="{% url 'catalog:author_info' id=obj.id %}">{{ obj.name }} {{ obj.surname }}</a></li>
+        {% endfor %}
+    </ul>
+    <ul><a href="{% url 'catalog:index' %}">Back to main menu</a></ul>
+</body>
+</html>

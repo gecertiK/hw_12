@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hello</title>
+</head>
+<body>
+    <h1> These links helps you to find book or authors or publishers or stores which you want!</h1>
+    <p><a href="{% url 'catalog:books' %}">All books</a></p>
+    <p><a href="{% url 'catalog:authors' %}">All authors</a></p>
+    <p><a href="{% url 'catalog:publishers' %}">All publishers</a></p>
+    <p><a href="{% url 'catalog:stores' %}">All stores</a></p>
+
+</body>
+</html>
