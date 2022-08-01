@@ -14,7 +14,7 @@ def books_list(request):
                                         Min('price'),
                                         Count('title'),
                                         Max('pages'),
-                                        Min('pages')
+                                        Min('pages'),
                                         )
     book_list = Book.objects.select_related('author').all()
     books = []
@@ -30,7 +30,7 @@ def books_list(request):
                   )
 
 
-def book_info(request, id):
+def book_info(request, id):  # noqa: A002
     book = Book.objects.select_related('author').get(id=id)
     publisher = Publisher.objects.prefetch_related('book_set__publisher').filter(book=id)
     return render(
@@ -57,7 +57,7 @@ def authors_list(request):
                   )
 
 
-def author_info(request, id):
+def author_info(request, id):  # noqa: A002
     author = Author.objects.get(id=id)
     book_author = Book.objects.select_related('author').filter(author_id=id)
     return render(
@@ -92,7 +92,7 @@ def stores_list(request):
                   )
 
 
-def stores_info(request, id):
+def stores_info(request, id):  # noqa: A002
     store = Store.objects.prefetch_related('publisher').get(id=id)
     books = Book.objects.prefetch_related('publisher').filter(publisher__name=store.publisher.name)
     return render(request,
