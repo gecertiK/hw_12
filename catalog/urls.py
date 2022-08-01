@@ -5,7 +5,7 @@ from django.urls import path
 
 app_name = 'catalog'
 urlpatterns = [
-    path('catalog/', index, name="index"),
+    path('', index, name="index"),
     path('books/', books_list, name='books'),
     path('books/<int:id>/', book_info, name='books_info'),
     path('authors/', authors_list, name="authors"),
