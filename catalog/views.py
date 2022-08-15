@@ -1,7 +1,12 @@
-from catalog.models import Author, Book, Publisher, Store
-
 from django.db.models import Avg, Count, Max, Min
 from django.shortcuts import render
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
+from django.urls import reverse_lazy
+from django.views import generic
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+
+from .models import Author, Book, Publisher, Store
 
 
 def index(request):
@@ -110,7 +115,7 @@ def publishers_list(request):
     publisher_list = Publisher.objects.select_related('store').all()
     pub_list = []
     for publisher in publisher_list:
-        books = Book.objects.prefetch_related('publisher').filter(publisher__name=publisher.name).\
+        books = Book.objects.prefetch_related('publisher').filter(publisher__name=publisher.name). \
             aggregate(Avg('price'))
         pub_list.append(
             {'name': publisher.name,
@@ -137,3 +142,36 @@ def publisher_info(request, pk):
                    'books': books
                    }
                   )
+
+
+class AuthorCreateView(LoginRequiredMixin, CreateView):
+    model = Author
+    fields = ['name', 'surname', 'country']
+    template_name = 'catalog/create_author.html'
+    success_url = reverse_lazy('catalog:authors')
+
+
+class AuthorUpdateView(LoginRequiredMixin, UpdateView):
+    model = Author
+    fields = ['name', 'surname', 'country']
+    template_name = 'catalog/update_author.html'
+    success_url = reverse_lazy('catalog:authors')
+
+
+class AuthorDeleteView(LoginRequiredMixin, DeleteView):
+    model = Author
+    fields = ['name', 'surname', 'country']
+    template_name = 'catalog/delete_author.html'
+    success_message = 'Author Delete Successfully'
+    success_url = reverse_lazy('catalog:authors')
+
+
+class AuthorListView(generic.ListView):
+    model = Author
+    paginate_by = 5
+    template_name = 'catalog/pagination_author.html'
+
+
+class AuthorDetailView(generic.DetailView):
+    model = Author
+    template_name = 'catalog/detail_author.html'

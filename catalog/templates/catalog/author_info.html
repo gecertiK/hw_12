@@ -5,7 +5,10 @@
     <title>Author information</title>
 </head>
 <body>
-
+<ul><a href="{% url 'catalog:index' %}">Back to main menu</a></ul>
+<ul><a href="{% url 'catalog:authors' %}">Back to the list of authors</a></ul>
+<ul><a href="{% url 'catalog:update_author' pk=id %}">Update this author</a></ul>
+<ul><a href="{% url 'catalog:delete_author' pk=id %}">Delete this author</a></ul>
 <h1>Information about author:</h1>
     <ul>ID: {{ id }}</ul>
     <ul>Name: {{ name }} {{ surname }}</ul>
@@ -14,8 +17,7 @@
     {% for obj in books %}
             <ul><a href="{% url 'catalog:books_info' id=obj.id %}">{{ obj.id }} "{{ obj.title }}"</a></ul>
     {% endfor %}
-    <ul><a href="{% url 'catalog:index' %}">Back to main menu</a></ul>
-    <ul><a href="{% url 'catalog:authors' %}">Back to the list of authors</a></ul>
+
 </body>
 
 </html>

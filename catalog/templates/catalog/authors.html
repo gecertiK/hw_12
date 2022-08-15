@@ -5,14 +5,15 @@
     <title>Authors</title>
 </head>
 <body>
-
-    <h1>Count of authors: {{ authors.count }}</h1>
-   <h2>List of authors</h2>
-   <ul>
-        {% for obj in authors %}
-            <li><a href="{% url 'catalog:author_info' id=obj.id %}">{{ obj.name }} {{ obj.surname }}</a></li>
-        {% endfor %}
-    </ul>
     <ul><a href="{% url 'catalog:index' %}">Back to main menu</a></ul>
+        <h1>Count of authors: {{ authors.count }}</h1>
+       <h2>List of authors</h2>
+       <ul>
+            {% for obj in authors %}
+                <li><a href="{% url 'catalog:author_info' id=obj.id %}">{{ obj.name }} {{ obj.surname }}</a></li>
+            {% endfor %}
+        </ul>
+    <ul><a href="{% url 'catalog:create_author' %}">Create author</a></ul>
+    <ul><a href="{% url 'catalog:pagination_author' %}">Pagination of authors</a></ul>
 </body>
 </html>
