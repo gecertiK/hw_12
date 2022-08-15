@@ -1,8 +1,7 @@
-from django.urls import path
+from catalog.views import AuthorCreateView, AuthorDeleteView, AuthorDetailView, AuthorListView, AuthorUpdateView, \
+    author_info, authors_list, book_info, books_list, index, publisher_info, publishers_list, stores_info, stores_list
 
-from catalog.views import AuthorCreateView, AuthorDeleteView, AuthorDetailView, AuthorUpdateView, AuthorListView
-from .views import author_info, authors_list, book_info, books_list, index, publisher_info, publishers_list, \
-    stores_info, stores_list
+from django.urls import path
 
 app_name = 'catalog'
 urlpatterns = [

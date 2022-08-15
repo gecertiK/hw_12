@@ -1,12 +1,11 @@
-from django.db.models import Avg, Count, Max, Min
-from django.shortcuts import render
+from catalog.models import Author, Book, Publisher, Store
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
+from django.db.models import Avg, Count, Max, Min
+from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views import generic
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
-
-from .models import Author, Book, Publisher, Store
+from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 
 
 def index(request):
@@ -14,28 +13,16 @@ def index(request):
 
 
 def books_list(request):
-    info = Book.objects.all().aggregate(Avg('price'),
-                                        Max('price'),
-                                        Min('price'),
-                                        Count('title'),
-                                        Max('pages'),
-                                        Min('pages'),
-                                        )
+    info = Book.objects.all().aggregate(Avg('price'), Max('price'), Min('price'), Count('title'), Max('pages'),
+                                        Min('pages'))
     book_list = Book.objects.select_related('author').all()
     books = []
     for book in book_list:
-        books.append({'id': book.id,
-                      'title': book.title,
-                      'author': book.author.surname
-                      }
-                     )
-    return render(request, 'catalog/books.html',
-                  {'books': books,
-                   'info': info}
-                  )
+        books.append({'id': book.id, 'title': book.title, 'author': book.author.surname})
+    return render(request, 'catalog/books.html', {'books': books, 'info': info})
 
 
-def book_info(request, id):  # noqa: A002
+def book_info(request, id):  # noqa:A002
     book = Book.objects.select_related('author').get(id=id)
     publisher = Publisher.objects.prefetch_related('book_set__publisher').filter(book=id)
     return render(
@@ -56,10 +43,7 @@ def book_info(request, id):  # noqa: A002
 
 def authors_list(request):
     authors = Author.objects.all().annotate(count=Count('surname'))
-    return render(request, 'catalog/authors.html',
-                  {'authors': authors,
-                   }
-                  )
+    return render(request, 'catalog/authors.html', {'authors': authors, })
 
 
 def author_info(request, id):  # noqa: A002
@@ -84,17 +68,9 @@ def stores_list(request):
         count = Book.objects.prefetch_related('publisher__store').filter(publisher__name=store.publisher.name). \
             annotate(count=Count('title'))
 
-        stores.append({'id': store.id,
-                       'name': store.name,
-                       'address': store.address,
-                       'publisher': store.publisher.name,
-                       'count': count
-                       }
-                      )
-    return render(request, 'catalog/stores.html',
-                  {'stores': stores,
-                   }
-                  )
+        stores.append({'id': store.id, 'name': store.name, 'address': store.address, 'publisher': store.publisher.name,
+                       'count': count})
+    return render(request, 'catalog/stores.html', {'stores': stores, })
 
 
 def stores_info(request, id):  # noqa: A002
@@ -118,16 +94,8 @@ def publishers_list(request):
         books = Book.objects.prefetch_related('publisher').filter(publisher__name=publisher.name). \
             aggregate(Avg('price'))
         pub_list.append(
-            {'name': publisher.name,
-             'store': publisher.store.name,
-             'pk': publisher.pk,
-             'books': books
-             }
-        )
-    return render(request, 'catalog/publishers.html',
-                  {'pub_list': pub_list,
-                   }
-                  )
+            {'name': publisher.name, 'store': publisher.store.name, 'pk': publisher.pk, 'books': books})
+    return render(request, 'catalog/publishers.html', {'pub_list': pub_list, })
 
 
 def publisher_info(request, pk):
@@ -144,34 +112,36 @@ def publisher_info(request, pk):
                   )
 
 
-class AuthorCreateView(LoginRequiredMixin, CreateView):
+class AuthorCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Author
     fields = ['name', 'surname', 'country']
-    template_name = 'catalog/create_author.html'
+    template_name = 'catalog/author_form.html'
+    success_message = "New author was created"
     success_url = reverse_lazy('catalog:authors')
 
 
-class AuthorUpdateView(LoginRequiredMixin, UpdateView):
+class AuthorUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Author
     fields = ['name', 'surname', 'country']
     template_name = 'catalog/update_author.html'
+    success_message = "Author was updated"
     success_url = reverse_lazy('catalog:authors')
 
 
-class AuthorDeleteView(LoginRequiredMixin, DeleteView):
+class AuthorDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     model = Author
     fields = ['name', 'surname', 'country']
     template_name = 'catalog/delete_author.html'
-    success_message = 'Author Delete Successfully'
+    success_message = "Author was deleted"
     success_url = reverse_lazy('catalog:authors')
 
 
-class AuthorListView(generic.ListView):
+class AuthorListView(ListView):
     model = Author
     paginate_by = 5
     template_name = 'catalog/pagination_author.html'
 
 
-class AuthorDetailView(generic.DetailView):
+class AuthorDetailView(DetailView):
     model = Author
     template_name = 'catalog/detail_author.html'

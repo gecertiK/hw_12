@@ -7,7 +7,7 @@ class Author(models.Model):
     country = models.CharField(max_length=100)
 
     def __str__(self):
-        return f"{self.surname} | {self.country}"
+        return f"{self.name} {self.surname}"
 
 
 class Store(models.Model):
